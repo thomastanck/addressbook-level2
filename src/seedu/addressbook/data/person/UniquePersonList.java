@@ -131,10 +131,10 @@ public class UniquePersonList implements Iterable<Person> {
     }
 
     /**
-     * Sorts persons in list by name in alphabetical order.
+     * Sorts persons in list by name in alphabetical order. Ignores case.
      */
     public void sortByName() {
-        internalList.sort(Comparator.comparing(person -> person.getName().fullName));
+        internalList.sort(Comparator.comparing(person -> person.getName().fullName.toLowerCase()));
     }
 
     @Override
