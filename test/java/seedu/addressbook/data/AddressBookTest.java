@@ -1,7 +1,9 @@
 package seedu.addressbook.data;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import static seedu.addressbook.util.TestUtil.getSize;
 import static seedu.addressbook.util.TestUtil.isEmpty;
 import static seedu.addressbook.util.TestUtil.isIdentical;
@@ -35,6 +37,9 @@ public class AddressBookTest {
     private Person bobChaplin;
     private Person charlieDouglas;
     private Person davidElliot;
+
+    private Person lowerCaseBobChaplin;
+    private Person upperCaseCharlieDouglas;
 
     private AddressBook defaultAddressBook;
     private AddressBook emptyAddressBook;
@@ -70,6 +75,18 @@ public class AddressBookTest {
                                     new Email("douglas@nuscomputing.com", false),
                                     new Address("11 Arts Link", false),
                                     new HashSet<>(Arrays.asList(tagEconomist, tagPrizeWinner)));
+
+        lowerCaseBobChaplin    = new Person(new Name("bob chaplin"),
+                                            new Phone("94321500", false),
+                                            new Email("bob@nusgreyhats.org", false),
+                                            new Address("9 Computing Drive", false),
+                                            Collections.singleton(tagMathematician));
+
+        upperCaseCharlieDouglas = new Person(new Name("CHARLIE DOUGLAS"),
+                                             new Phone("98751365", false),
+                                             new Email("charlie@nusgdg.org", false),
+                                             new Address("10 Science Drive", false),
+                                             Collections.singleton(tagScientist));
 
         emptyAddressBook = new AddressBook();
         defaultAddressBook = new AddressBook(new UniquePersonList(aliceBetsy, bobChaplin));
@@ -126,6 +143,60 @@ public class AddressBookTest {
         defaultAddressBook.clear();
 
         assertTrue(isEmpty(defaultAddressBook.getAllPersons()));
+    }
+
+    @Test
+    public void sortByName() {
+        UniquePersonList[][] tests;
+        try {
+            tests = new UniquePersonList[][]{
+                    new UniquePersonList[]{
+                            new UniquePersonList(aliceBetsy, bobChaplin),
+                            new UniquePersonList(aliceBetsy, bobChaplin)},
+                    new UniquePersonList[]{
+                            new UniquePersonList(bobChaplin, aliceBetsy),
+                            new UniquePersonList(aliceBetsy, bobChaplin)},
+                    new UniquePersonList[]{
+                            new UniquePersonList(davidElliot, bobChaplin, aliceBetsy, charlieDouglas),
+                            new UniquePersonList(aliceBetsy, bobChaplin, charlieDouglas, davidElliot)},
+                    new UniquePersonList[]{
+                            new UniquePersonList(aliceBetsy, lowerCaseBobChaplin),
+                            new UniquePersonList(aliceBetsy, lowerCaseBobChaplin)},
+                    new UniquePersonList[]{
+                            new UniquePersonList(lowerCaseBobChaplin, aliceBetsy),
+                            new UniquePersonList(aliceBetsy, lowerCaseBobChaplin)},
+                    new UniquePersonList[]{
+                            new UniquePersonList(aliceBetsy, upperCaseCharlieDouglas),
+                            new UniquePersonList(aliceBetsy, upperCaseCharlieDouglas)},
+                    new UniquePersonList[]{
+                            new UniquePersonList(upperCaseCharlieDouglas, aliceBetsy),
+                            new UniquePersonList(aliceBetsy, upperCaseCharlieDouglas)},
+                    new UniquePersonList[]{
+                            new UniquePersonList(davidElliot, lowerCaseBobChaplin),
+                            new UniquePersonList(lowerCaseBobChaplin, davidElliot)},
+                    new UniquePersonList[]{
+                            new UniquePersonList(lowerCaseBobChaplin, davidElliot),
+                            new UniquePersonList(lowerCaseBobChaplin, davidElliot)},
+                    new UniquePersonList[]{
+                            new UniquePersonList(davidElliot, upperCaseCharlieDouglas),
+                            new UniquePersonList(upperCaseCharlieDouglas, davidElliot)},
+                    new UniquePersonList[]{
+                            new UniquePersonList(upperCaseCharlieDouglas, davidElliot),
+                            new UniquePersonList(upperCaseCharlieDouglas, davidElliot)},
+            };
+
+            for (int i = 0; i < tests.length; i++) {
+                UniquePersonList input          = tests[i][0];
+                UniquePersonList expectedOutput = tests[i][1];
+
+                AddressBook testBook = new AddressBook(input);
+                testBook.sortByName();
+                assertEquals(String.format("sortByName test %d", i), testBook.getAllPersons(), expectedOutput);
+            }
+
+        } catch (DuplicatePersonException e) {
+            fail("Test case has duplicate person, test is probably incorrectly specified.");
+        }
     }
 
     @Test
