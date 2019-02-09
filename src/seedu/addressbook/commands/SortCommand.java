@@ -6,7 +6,8 @@ package seedu.addressbook.commands;
 public class SortCommand extends Command {
 
     public static final String COMMAND_WORD = "sort";
-    public static final String MESSAGE_USAGE = "Sorts address book permanently in alphabetical order of names.\n"
+    public static final String MESSAGE_USAGE = COMMAND_WORD
+            + ": Sorts address book permanently in alphabetical order of names.\n"
             + "Example: " + COMMAND_WORD;
 
     public static final String MESSAGE_SUCCESS = "Address book has been sorted!";
